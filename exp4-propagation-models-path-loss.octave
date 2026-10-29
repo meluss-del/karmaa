@@ -1,0 +1,32 @@
+% Experiment No. 4: Effect of Propagation Models On Coverage Distance
+clc;
+clear all;
+close all;
+
+transmit_power = 30;
+freq = 900e6;
+antenna_height_tx = 40;
+antenna_height_rx = 10;
+
+% Distance range
+d = 1:1:1000;
+
+% Path loss models
+free_space_path_loss = (20*log10(d)) + 20*log10(freq) - 147.55;
+two_ray_ground_path_loss = (40*log10(d)) + 20*log10(antenna_height_rx) + 20*log10(antenna_height_tx) + 20*log10(freq) - 147.55;
+
+% Calculation
+free_space_losses = free_space_path_loss(d);
+two_ray_losses = two_ray_ground_path_loss(d);
+
+% Plot results
+figure;
+plot(d, free_space_path_loss, 'b', 'DisplayName', 'Free Space Path Loss');
+hold on;
+plot(d, two_ray_ground_path_loss, 'r', 'DisplayName', 'Two Ray Ground Path Loss');
+xlabel('Distance(m)');
+ylabel('Path Loss(dB)');
+title('Effect of Propagation Models On Coverage Distance');
+legend;
+grid on;
+hold off;

@@ -1,0 +1,35 @@
+% Experiment No. 6: Walsh Code Generation and Orthogonality Check
+clc;
+clear all;
+close all;
+
+n = input('Enter the number=');
+Hn = 1;
+for i = 0:2:n
+    H2n = [Hn Hn; Hn -Hn];
+    Hn = H2n;
+end
+disp(H2n);
+[p, q] = size(H2n);
+
+X = input('Enter first Walsh Code Number:');
+Y = input('Enter second Walsh Code Number:');
+H = H2n(X, 1:p) .* H2n(Y, 1:q);
+disp(H);
+
+L = 0;
+for k = 1
+    for z = 1:q
+        L = L + H(k, z);
+        z = z + 1;
+    endfor
+endfor
+
+disp('The Addition is');
+disp(L);
+
+if L == 0
+    disp('It is Orthogonal');
+else
+    disp('It is not Orthogonal');
+end
