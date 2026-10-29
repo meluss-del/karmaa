@@ -1,23 +1,39 @@
-%-----------Erlang C-------------
+clc;
+clear all;
+close all;
+
+C_values = [1, 2, 5, 10, 50, 100];
+A = 0:1:150;
+colors = ['r', 'g', 'b', 'm', 'c', 'k'];
+
 figure;
 hold on;
-for idx=1:length(C_values)
- C=C_values(idx);
- P=zeros(size(A)); %Delay probability
- for k=1:length(A)
- if A(k)<C
- sumC=sum(A(k).^(0:C-1)./factorial(0:C-1));
- numerator=(A(k)^C/factorial(C))*(C/(C-A(k)));
- denominator=sumC + numerator;
- P(k)=numerator/denominator;
- else
- P(k)=NaN;
- end
- end
- plot(A,P,[colors(idx) '--'],'DisplayName',['C=' num2str(C)],'LineWidth',2);
+
+for idx = 1:length(C_values)
+    C = C_values(idx);
+    P_delay = nan(size(A));
+    
+    for k = 1:length(A)
+        a = A(k);
+        if a < C
+            B = 1;
+            for m = 1:C
+                B = (a * B) / (m + a * B);
+            end
+            P_delay(k) = (C * B) / (C - a * (1 - B));
+        else
+            P_delay(k) = NaN;
+        end
+    end
+    
+    plot(A, P_delay, [colors(idx) '--'], 'DisplayName', ['C = ' num2str(C)], 'LineWidth', 2);
 end
+
 xlabel('Traffic Intensity A (Erlangs)');
-ylabel('Delay Probability P');
-title('Erlang C:Blocked Call Delayed for Various C');
-legend show;
+ylabel('Delay Probability P(W > 0)');
+title('Erlang C: Blocked Calls Delayed for Various C');
+legend('Location', 'northwest');
 grid on;
+ylim([0 1]);
+xlim([0 150]);
+hold off;
