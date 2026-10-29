@@ -1,20 +1,27 @@
-% Experiment No. 2 (Part 1): Probability of Call Blocking (Erlang B)
+
 clc;
 clear all;
-close all;
-
-A = 0.1:0.1:100;
-B = 0;
-for C = [1, 2, 5, 10, 50, 100]
-    a = (A.^C) / factorial(C);
-    for k = 0:1:C
-        B = B + ((A.^k) / factorial(k));
-    endfor
-    Pr = a ./ B;
-    loglog(A, Pr);
-    hold on;
-    grid on;
-    axis([0.1 100 0.001 0.1]);
-endfor
-xlabel("Traffic Intensity");
-ylabel("Probability of call blocking");
+C_values=[1,2,5,10,50,100]; %
+#Different no. of channels
+A=0:1:150; %
+#traffic intensity range
+colors=['r','g','b','m','c','k']; %Color
+#codes for plotting
+%------------Erlang B------------
+figure;
+hold on;
+for idx=1:length(C_values)
+ C=C_values(idx);
+ P=zeros(size(A)); %Blocking probability
+ for k=1:length(A)
+ numerator=(A(k)^C)/factorial(C);
+ denominator=sum(A(k).^(0:C)./factorial(0:C));
+ P(k)=numerator/denominator;
+ endfor
+plot(A,P,[colors(idx) '-'], 'DisplayName',['C=' num2str(C)],'LineWidth',2);
+end
+xlabel('Traffic Intensity A (Erlangs)');
+ylabel('Bloacking Probability P');
+title('Erlang B:Blocked Call Cleared for Various C');
+legend show;
+grid on;
