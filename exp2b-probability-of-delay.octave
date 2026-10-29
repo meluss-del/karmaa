@@ -1,21 +1,23 @@
-% Experiment No. 2 (Part 2): Probability of Delay (Erlang C)
-clc;
-clear all;
-close all;
-
-A = 0.1:0.1:100;
-D = 0;
-for C = [1, 2, 5, 10, 50, 100]
-    a = (A.^C);
-    for k = 0:1:C-1
-        D = D + ((A.^k) / (factorial(k)));
-    end
-    B = (A.^C) + ((factorial(C)) .* (1 - (A/C)) .* D);
-    Pr = a ./ B;
-    loglog(A, Pr);
-    hold on;
-    grid on;
-    axis([0.1 100 0.01 0.1]);
+%-----------Erlang C-------------
+figure;
+hold on;
+for idx=1:length(C_values)
+ C=C_values(idx);
+ P=zeros(size(A)); %Delay probability
+ for k=1:length(A)
+ if A(k)<C
+ sumC=sum(A(k).^(0:C-1)./factorial(0:C-1));
+ numerator=(A(k)^C/factorial(C))*(C/(C-A(k)));
+ denominator=sumC + numerator;
+ P(k)=numerator/denominator;
+ else
+ P(k)=NaN;
+ end
+ end
+ plot(A,P,[colors(idx) '--'],'DisplayName',['C=' num2str(C)],'LineWidth',2);
 end
-xlabel('Traffic Intensity');
-ylabel('Probability of delay');
+xlabel('Traffic Intensity A (Erlangs)');
+ylabel('Delay Probability P');
+title('Erlang C:Blocked Call Delayed for Various C');
+legend show;
+grid on;
